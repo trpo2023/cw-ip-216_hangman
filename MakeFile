@@ -1,0 +1,29 @@
+TARGET = bin\Game
+
+CC = g++
+
+CFLAGS = -std=c++11 -Isrc/include -DSFML_STATIC
+
+LDFLAGS = -Lsrc/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lsfml-audio -lopengl32 -lfreetype -lwinmm -lgdi32 -mwindows
+
+SRCDIR = src
+OBJDIR = obj
+
+SRCS = $(wildcard $(SRCDIR)/*.cpp)
+
+OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCS))
+
+
+DEPS = $(wildcard $(SRCDIR)/*.h)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(OBJS) -o $(TARGET) $(LDFLAGS)
+
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
+	$(CC) -c $< $(CFLAGS) -o $@
+
+clean:
+	rm -f $(OBJS) $(TARGET)
