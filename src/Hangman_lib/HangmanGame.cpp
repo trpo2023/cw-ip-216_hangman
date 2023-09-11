@@ -12,8 +12,8 @@ void HangmanGame::Init() {
     isGameOver = false;
     isGameWon = false;
 
-    font.loadFromFile("../Assetst/arial.ttf");
-    backgroundTexture.loadFromFile("../Assetst/game_background.jpg");
+    font.loadFromFile("../resources/arial.ttf");
+    backgroundTexture.loadFromFile("../resources/game_background.jpg");
     backgroundSprite.setTexture(backgroundTexture);
     wordText.setFont(font);
     wordText.setCharacterSize(40);
@@ -33,10 +33,10 @@ void HangmanGame::Init() {
 }
 
 void HangmanGame::LoadSounds() {
-    correctGuessSoundBuffer.loadFromFile("../Assetst/correct.wav");
-    wrongGuessSoundBuffer.loadFromFile("../Assetst/wrong.wav");
-    winSoundBuffer.loadFromFile("../Assetst/win.wav");
-    loseSoundBuffer.loadFromFile("../Assetst/lose.wav");
+    correctGuessSoundBuffer.loadFromFile("../resources/correct.wav");
+    wrongGuessSoundBuffer.loadFromFile("../resources/Assetst/wrong.wav");
+    winSoundBuffer.loadFromFile("../resources/win.wav");
+    loseSoundBuffer.loadFromFile("../resources/lose.wav");
 
     correctGuessSound.setBuffer(correctGuessSoundBuffer);
     wrongGuessSound.setBuffer(wrongGuessSoundBuffer);

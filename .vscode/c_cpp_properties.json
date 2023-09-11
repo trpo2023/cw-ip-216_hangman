@@ -5,7 +5,7 @@
             "includePath": [
                 "${default}",
                 "${workspaceFolder}",
-                "src/include",
+                "thirdparty/include",
                 "C:\\cw-ip-216_hangman\\thirdparty"
             ],
             "defines": [
