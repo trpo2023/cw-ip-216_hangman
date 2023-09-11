@@ -181,3 +181,17 @@ void HangmanGame::Reset() {
     isGameOver = false;
     isGameWon = false;
 }
+std::string HangmanGame::GetWrongGuesses() const {
+    std::string wrongGuesses;
+    for (char guess : targetWord) {
+        if (guessedWord.find(guess) == std::string::npos) {
+            wrongGuesses += guess;
+        }
+    }
+    return wrongGuesses;
+}
+
+
+
+
+

@@ -1,29 +1,48 @@
-TARGET = bin\Game
+TARGET = bin/Game
+TEST_TARGET = bin/TestGame
 
 CC = g++
-
-CFLAGS = -std=c++11 -Isrc/include -DSFML_STATIC
-
+CFLAGS = -std=c++11 -Isrc/include -I"C:\Users\Rustam\Desktop\ctest" -DSFML_STATIC
 LDFLAGS = -Lsrc/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lsfml-audio -lopengl32 -lfreetype -lwinmm -lgdi32 -mwindows
 
 SRCDIR = src
-OBJDIR = obj
+OBJDIR = obj/src
 
+# Извлекаем список исходных файлов
 SRCS = $(wildcard $(SRCDIR)/*.cpp)
 
+# Генерируем список объектных файлов для исходных файлов
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCS))
 
-
 DEPS = $(wildcard $(SRCDIR)/*.h)
+
+TEST_SRCDIR = test
+TEST_OBJDIR = obj/test
+
+# Извлекаем список исходных файлов тестов
+TEST_SRCS = $(wildcard $(TEST_SRCDIR)/*.cpp)
+
+# Генерируем список объектных файлов для тестов
+TEST_OBJS = $(patsubst $(TEST_SRCDIR)/%.cpp, $(TEST_OBJDIR)/%.o, $(TEST_SRCS))
+
+DEPS += $(wildcard $(TEST_SRCDIR)/*.h)
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CC) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
+$(TEST_TARGET): $(TEST_OBJS) $(OBJS)
+	$(CC) $(TEST_OBJS) $(OBJS) -o $(TEST_TARGET) $(LDFLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
 	$(CC) -c $< $(CFLAGS) -o $@
 
+$(TEST_OBJDIR)/%.o: $(TEST_SRCDIR)/%.cpp $(DEPS)
+	$(CC) -c $< $(CFLAGS) -o $@
+
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
+
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET) $(TEST_OBJS) $(TEST_TARGET)

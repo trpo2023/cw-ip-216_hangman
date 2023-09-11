@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <vector>
+
 
 class HangmanGame {
 public:
@@ -11,6 +13,7 @@ public:
     bool IsGameWon() const {
         return guessedWord == secretWord;
     }
+    std::string GetWrongGuesses() const;
     bool IsGameOver() const {
         return attemptsLeft == 0 || IsGameWon();
     }
@@ -32,7 +35,6 @@ public:
     GameState GetGameState() const {
         return gameState;
     }
-    
 private:
     std::string targetWord;
     std::string secretWord;

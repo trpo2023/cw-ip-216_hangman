@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include "HangmanGame.h"
-#include "MainMenu.h"
+#include "../Hangman_lib/HangmanGame.h"
+#include "../Hangman_lib/MainMenu.h"
 #include <iostream>
 
 bool inGame = true;
