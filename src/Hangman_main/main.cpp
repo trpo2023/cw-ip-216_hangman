@@ -53,7 +53,7 @@ int main() {
     bool inGame = false;
 
     sf::Font font;
-    if (!font.loadFromFile("../Assetst/arial.ttf")) {
+    if (!font.loadFromFile("../../src/resources/arial.ttf")) {
         return 1;
     }
 
@@ -92,10 +92,10 @@ int main() {
                     gameOverText.setFillColor(sf::Color::Black);
 
                     if (hangmanGame.IsGameWon()) {
-                        gameOverText.setString("You Win! Press Enter to continue or Esc to quit.");
+                        gameOverText.setString("You Win!");
                     }
                     else {
-                        gameOverText.setString("You Lose! Press Enter to continue or Esc to quit.");
+                        gameOverText.setString("You Lose!");
                     }
 
                     gameOverText.setPosition(200.f, 500.f);

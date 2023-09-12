@@ -1,48 +1,72 @@
-TARGET = bin/Game
-TEST_TARGET = bin/TestGame
-
 CC = g++
-CFLAGS = -std=c++11 -Isrc/include -I"C:\Users\Rustam\Desktop\ctest" -DSFML_STATIC
-LDFLAGS = -Lsrc/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lsfml-audio -lopengl32 -lfreetype -lwinmm -lgdi32 -mwindows
 
-SRCDIR = src
-OBJDIR = obj/src
+CFLAGS = -Wall -Wextra -Werror -Ithirdparty/ -Isrc/Hangman_lib -Ithirdparty/include -DSFML_STATIC
 
-# Извлекаем список исходных файлов
-SRCS = $(wildcard $(SRCDIR)/*.cpp)
+SFML_LIBS = -Lthirdparty/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lsfml-audio -lopengl32 -lfreetype -lwinmm -lgdi32
 
-# Генерируем список объектных файлов для исходных файлов
-OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCS))
+LIFE_SRC = src/Hangman_main/
+LIBLIFE_SRC = src/Hangman_lib/
 
-DEPS = $(wildcard $(SRCDIR)/*.h)
+LIFE_OBJ = obj/src/Hangman_main/
+LIBLIFE_OBJ = obj/src/Hangman_lib/
 
-TEST_SRCDIR = test
-TEST_OBJDIR = obj/test
+BIN = bin/
 
-# Извлекаем список исходных файлов тестов
-TEST_SRCS = $(wildcard $(TEST_SRCDIR)/*.cpp)
+TEST_BIN = bin/Hangman_test/ 
 
-# Генерируем список объектных файлов для тестов
-TEST_OBJS = $(patsubst $(TEST_SRCDIR)/%.cpp, $(TEST_OBJDIR)/%.o, $(TEST_SRCS))
+SRC = src/
 
-DEPS += $(wildcard $(TEST_SRCDIR)/*.h)
+TEST = test/
 
-all: $(TARGET)
+TEST_OBJ = obj/test/
 
-$(TARGET): $(OBJS)
-	$(CC) $(OBJS) -o $(TARGET) $(LDFLAGS)
+THIRDPARTY = thirdparty/
 
-$(TEST_TARGET): $(TEST_OBJS) $(OBJS)
-	$(CC) $(TEST_OBJS) $(OBJS) -o $(TEST_TARGET) $(LDFLAGS)
+SRCS := $(shell find . -type f -name '*.cpp')
+HDRS := $(shell find . -type f -name '*.h')
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
-	$(CC) -c $< $(CFLAGS) -o $@
+.PHONY: main
 
-$(TEST_OBJDIR)/%.o: $(TEST_SRCDIR)/%.cpp $(DEPS)
-	$(CC) -c $< $(CFLAGS) -o $@
+$(BIN)Hangman_main/main.out: $(LIFE_OBJ)main.o $(LIBLIFE_OBJ)liblife.a
+	$(CC) $(CFLAGS) -o $@ $^ $(SFML_LIBS)
+$(LIFE_OBJ)main.o: $(LIFE_SRC)main.cpp 
+	$(CC) -c $(CFLAGS) -o $@ $^
+$(LIBLIFE_OBJ)liblife.a: $(LIBLIFE_OBJ)HangmanGame.o $(LIBLIFE_OBJ)MainMenu.o 
+	ar rcs $@ $^
+$(LIBLIFE_OBJ)HangmanGame.o: $(LIBLIFE_SRC)HangmanGame.cpp
+	$(CC) -c $(CFLAGS) -o $@ $^
+$(LIBLIFE_OBJ)MainMenu.o: $(LIBLIFE_SRC)MainMenu.cpp
+	$(CC) -c $(CFLAGS) -o $@ $^
 
-test: $(TEST_TARGET)
-	./$(TEST_TARGET)
+.PHONY: test
+
+test: $(BIN)Hangman_test/test
+	./$<
+
+$(BIN)Hangman_test/test: $(TEST_OBJ)ctest.o $(TEST_OBJ)main.o $(TEST_OBJ)testliblife.a 
+	$(CC) $(CFLAGS) -o $@ $^ $(SFML_LIBS)
+$(TEST_OBJ)ctest.o: $(TEST)ctest.cpp
+	$(CC) -c $(CFLAGS) -o $@ $^
+$(TEST_OBJ)main.o: $(TEST)main.cpp
+	$(CC) -c $(CFLAGS) -o $@ $^
+$(TEST_OBJ)testliblife.a: $(TEST_OBJ)MainMenu.o $(TEST_OBJ)HangmanGame.o
+	ar rcs $@ $^
+$(TEST_OBJ)HangmanGame.o: $(LIBLIFE_SRC)HangmanGame.cpp
+	$(CC) -c $(CFLAGS) -o $@ $^
+$(TEST_OBJ)MainMenu.o: $(LIBLIFE_SRC)MainMenu.cpp
+	$(CC) -c $(CFLAGS) -o $@ $^
+
+.PHONY: clean
 
 clean:
-	rm -f $(OBJS) $(TARGET) $(TEST_OBJS) $(TEST_TARGET)
+	rm -rf $(LIFE_OBJ)*.o
+	rm -rf $(LIBLIFE_OBJ)*.o
+	rm -rf $(LIBLIFE_OBJ)*.a
+	rm -rf $(TEST_OBJ)*.o
+	rm -rf $(TEST_OBJ)*.a
+	rm -rf $(BIN)*.out
+
+.PHONY: format
+
+format:
+	clang-format -i $(SRCS) $(HDRS)

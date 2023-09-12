@@ -6,7 +6,7 @@
                 "${default}",
                 "${workspaceFolder}",
                 "thirdparty/include",
-                "C:\\cw-ip-216_hangman\\thirdparty"
+                "thirdparty/"
             ],
             "defines": [
                 "_DEBUG",

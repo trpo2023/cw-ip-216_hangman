@@ -1,11 +1,17 @@
-#include <ctest.h>
-#include "../src/HangmanGame.h"
+#include "../thirdparty/ctest.h"
+#include "../src/Hangman_lib/HangmanGame.h"
+#include "../src/Hangman_lib/MainMenu.h"
 
 CTEST(HangmanGameTest, IsGameOverInitiallyFalse) {
     HangmanGame game;
     game.Init();
 
-    // Проверяем, что игра не завершена при инициализации.
     ASSERT_FALSE(game.IsGameOver());
+}
+
+CTEST(HangmanGameTest, IsGameWonInitiallyFalse) {
+    HangmanGame game;
+    game.Init();
+    ASSERT_FALSE(game.IsGameWon());
 }
 
