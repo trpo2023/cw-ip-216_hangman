@@ -19,7 +19,7 @@ HDRS := $(shell find $(LIFE_SRC) $(LIBLIFE_SRC) -type f -name '*.h')
 .PHONY: main
 
 $(BIN)Hangman_main/main.exe: $(LIFE_OBJ)main.o $(LIBLIFE_OBJ)liblife.a
-	$(CC) $(CFLAGS) -o $@ $^ $(SFML_LIBS) -L$(RESOURCES_DIR) -Wl,-rpath=$(RESOURCES_DIR)
+	$(CC) $(CFLAGS) -o $@ $^ $(SFML_LIBS) -L$(RESOURCES_DIR) -rpath=$(RESOURCES_DIR)
 
 $(LIFE_OBJ)main.o: $(LIFE_SRC)main.cpp 
 	$(CC) -c $(CFLAGS) -o $@ $^
