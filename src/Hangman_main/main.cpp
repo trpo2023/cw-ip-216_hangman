@@ -53,7 +53,7 @@ int main() {
     bool inGame = false;
 
     sf::Font font;
-    if (!font.loadFromFile("../../src/resources/arial.ttf")) {
+    if (!font.loadFromFile("../resources/arial.ttf")) {
         return 1;
     }
 

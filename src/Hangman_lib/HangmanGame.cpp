@@ -12,8 +12,8 @@ void HangmanGame::Init() {
     isGameOver = false;
     isGameWon = false;
 
-    font.loadFromFile("../../src/resources/arial.ttf");
-    backgroundTexture.loadFromFile("../../src/resources/game_background.jpg");
+    font.loadFromFile("../resources/arial.ttf");
+    backgroundTexture.loadFromFile("../resources/game_background.jpg");
     backgroundSprite.setTexture(backgroundTexture);
     wordText.setFont(font);
     wordText.setCharacterSize(40);
@@ -33,10 +33,10 @@ void HangmanGame::Init() {
 }
 
 void HangmanGame::LoadSounds() {
-    correctGuessSoundBuffer.loadFromFile("../../src/resources/correct.wav");
-    wrongGuessSoundBuffer.loadFromFile("../../src/resources/wrong.wav");
-    winSoundBuffer.loadFromFile("../../src/resources/win.wav");
-    loseSoundBuffer.loadFromFile("../../src/resources/lose.wav");
+    correctGuessSoundBuffer.loadFromFile("../resources/correct.wav");
+    wrongGuessSoundBuffer.loadFromFile("../resources/wrong.wav");
+    winSoundBuffer.loadFromFile("../resources/win.wav");
+    loseSoundBuffer.loadFromFile("../resources/lose.wav");
 
     correctGuessSound.setBuffer(correctGuessSoundBuffer);
     wrongGuessSound.setBuffer(wrongGuessSoundBuffer);
@@ -176,20 +176,22 @@ void HangmanGame::CheckForWin() {
 }
 void HangmanGame::Reset() {
     secretWord = "hangman";
-    guessedWord = std::string(secretWord.length(), ' ') + '_';
+    guessedWord = std::string(secretWord.length(), '_');
     attemptsLeft = 6;
     isGameOver = false;
     isGameWon = false;
 }
+
 std::string HangmanGame::GetWrongGuesses() const {
     std::string wrongGuesses;
-    for (char guess : targetWord) {
+    for (char guess : secretWord) {
         if (guessedWord.find(guess) == std::string::npos) {
             wrongGuesses += guess;
         }
     }
     return wrongGuesses;
 }
+
 
 
 

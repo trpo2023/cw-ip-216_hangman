@@ -1,7 +1,7 @@
 #include "MainMenu.h"
 
 MainMenu::MainMenu(sf::RenderWindow& window) : window(window) {
-    font.loadFromFile("../../src/resources/arial.ttf");
+    font.loadFromFile("../resources/arial.ttf");
     playText.setFont(font);
     playText.setCharacterSize(40);
     playText.setString("Play");
@@ -14,7 +14,7 @@ MainMenu::MainMenu(sf::RenderWindow& window) : window(window) {
 
     selectedItem = MenuItem::Play;
     UpdateTextColors();
-    backgroundTexture.loadFromFile("../../src/resources/background.jpg");
+    backgroundTexture.loadFromFile("../resources/background.jpg");
     backgroundSprite.setTexture(backgroundTexture);
     backgroundSprite.setScale(static_cast<float>(window.getSize().x) / backgroundTexture.getSize().x,
         static_cast<float>(window.getSize().y) / backgroundTexture.getSize().y);
