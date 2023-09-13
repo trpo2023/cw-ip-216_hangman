@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install -y g++
+        sudo apt-get install -y libsfml-dev
+        sudo apt-get install -y clang-format  # Установка зависимостей
+
+    - name: Build project
+      run: |
+        make  # Сборка вашего проекта
+
+    - name: Run tests
+      run: |
+        make test  # Запуск тестов
+
+    - name: Code formatting
+      run: |
+        make format  # Форматирование кода
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: ctest.xml  # Путь к файлу с результатами тестов
