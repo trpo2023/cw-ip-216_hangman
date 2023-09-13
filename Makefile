@@ -1,7 +1,7 @@
 # Компилятор и флаги
 CC = g++
 CFLAGS = -Wall -Wextra -Werror -Ithirdparty/ -Isrc/Hangman_lib -Ithirdparty/include -DSFML_STATIC
-SFML_LIBS = -Lthirdparty/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lsfml-audio -lopengl32 -lfreetype -lwinmm -lgdi32
+SFML_LIBS = -Lthirdparty/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lsfml-audio -lfreetype -lwinmm -lgdi32 -lole32 -luuid -lopengl32 -lwinmm -lgdi32
 LIFE_SRC = src/Hangman_main/
 LIBLIFE_SRC = src/Hangman_lib/
 LIFE_OBJ = obj/src/Hangman_main/
@@ -19,7 +19,7 @@ HDRS := $(shell find $(LIFE_SRC) $(LIBLIFE_SRC) -type f -name '*.h')
 .PHONY: main
 
 $(BIN)Hangman_main/main.exe: $(LIFE_OBJ)main.o $(LIBLIFE_OBJ)liblife.a
-	$(CC) $(CFLAGS) -o $@ $^ $(SFML_LIBS) -L$(RESOURCES_DIR) -rpath=$(RESOURCES_DIR)
+	$(CC) $(CFLAGS) -o $@ $^ $(SFML_LIBS) -L$(RESOURCES_DIR) -Wl,-rpath=$(RESOURCES_DIR)
 
 $(LIFE_OBJ)main.o: $(LIFE_SRC)main.cpp 
 	$(CC) -c $(CFLAGS) -o $@ $^
