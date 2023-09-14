@@ -3,37 +3,22 @@ name: CI
 on:
   push:
     branches:
-      - main
-
+      - main 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
-
-    - name: Install dependencies
-      run: |
-        sudo apt-get update -y
-        sudo apt-get install -y g++
-        sudo apt-get install -y libsfml-dev
-        sudo apt-get install -y clang-format  # Установка зависимостей
 
     - name: Build project
       run: |
-        make  # Сборка вашего проекта
+        g++ -std=c++11 -o Game.exe src/Hangman_main/*.cpp src/Hangman_lib/*.cpp
+      shell: cmd
 
     - name: Run tests
       run: |
-        make test  # Запуск тестов
-
-    - name: Code formatting
-      run: |
-        make format  # Форматирование кода
-
-    - name: Upload test results
-      uses: actions/upload-artifact@v2
-      with:
-        name: test-results
-        path: ctest.xml  # Путь к файлу с результатами тестов
+        g++ -std=c++11 -o Test.exe test/*.cpp src/Hangman_lib/*.cpp
+        ./Test.exe
+      shell: cmd

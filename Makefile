@@ -3,7 +3,7 @@ TARGET_DIR = $(BIN_DIR)/Hangman_main
 TEST_DIR = $(BIN_DIR)/Hangman_test
 
 TARGET = $(TARGET_DIR)/Game
-TEST_TARGET = $(BIN_DIR)/Test
+TEST_TARGET = $(BIN_DIR)/Hangman_test/Test
 
 CC = g++
 TEST_CC = g++
