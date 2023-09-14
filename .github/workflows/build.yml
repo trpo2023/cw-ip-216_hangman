@@ -19,6 +19,6 @@ jobs:
 
     - name: Run tests
       run: |
-        g++ -std=c++11 -o Test.exe test/*.cpp src/Hangman_lib/*.cpp
+        g++ -std=c++11 -o Test.exe test/*.cpp src/Hangman_lib/*.cpp -Ithirdparty/
         ./Test.exe
       shell: cmd
