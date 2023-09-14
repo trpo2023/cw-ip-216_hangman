@@ -1,126 +1,34 @@
-#include <SFML/Graphics.hpp>
-#include "../Hangman_lib/HangmanGame.h"
-#include "../Hangman_lib/MainMenu.h"
+#include "../hangman_lib/menu.h"
+#include "../hangman_lib/hangman.h"
 #include <iostream>
 
-bool inGame = true;
-bool isGameOverMenuVisible = false;
-bool isGameOver = false;
-
-void StartGame(sf::RenderWindow& window, HangmanGame& hangmanGame) {
-    hangmanGame.Init();
-    isGameOver = false;
-
-    while (!hangmanGame.IsGameOver()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-
-            if (event.type == sf::Event::TextEntered) {
-                if (event.text.unicode >= 32 && event.text.unicode <= 126) {
-                    char inputChar = static_cast<char>(event.text.unicode);
-                    hangmanGame.ProcessInput(inputChar);
-                }
-            }
-        }
-        window.clear(sf::Color::White);
-        hangmanGame.Draw(window);
-
-        window.display();
-
-        if (hangmanGame.IsGameWon()) {
-            std::cout << "You win!" << std::endl;
-            isGameOver = true;
-        }
-    }
-
-    if (!hangmanGame.IsGameWon()) {
-        std::cout << "You lose!" << std::endl;
-        isGameOver = true;
-    }
-}
-
-
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "Hangman Game");
-    window.setVerticalSyncEnabled(true);
-
-    HangmanGame hangmanGame;
-    MainMenu mainMenu(window);
-    MainMenu menu(window);
-    bool inMainMenu = true;
-    bool inGame = false;
-
-    sf::Font font;
-    if (!font.loadFromFile("../resources/arial.ttf")) {
-        return 1;
-    }
-
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-
-            if (inMainMenu) {
-                mainMenu.HandleInput(event, inMainMenu, inGame);
+    while (true) {
+        int mainChoice = Menu::showMainMenu();
+        if (mainChoice == 1) {
+            int difficultyChoice = Menu::showDifficultyMenu();
+            std::string difficulty;
+            
+            switch (difficultyChoice) {
+                case 1:
+                    difficulty = "easy";
+                    break;
+                case 2:
+                    difficulty = "medium";
+                    break;
+                case 3:
+                    difficulty = "hard";
+                    break;
+                default:
+                    break;
             }
+
+            Hangman game(difficulty);
+            game.play();
+        } else if (mainChoice == 2) {
+            std::cout << "Goodbye!" << std::endl;
+            break;
         }
-
-        isGameOverMenuVisible = false;
-
-        window.clear(sf::Color::White);
-
-        if (inMainMenu) {
-            window.setActive(false);
-            mainMenu.Draw();
-            window.setActive(true);
-            window.display();
-        }
-        else if (inGame) {
-            if (!isGameOver) {
-                StartGame(window, hangmanGame);
-            }
-            else {
-                hangmanGame.Draw(window);
-
-                if (!isGameOverMenuVisible) {
-                    sf::Text gameOverText;
-                    gameOverText.setFont(font);
-                    gameOverText.setCharacterSize(40);
-                    gameOverText.setFillColor(sf::Color::Black);
-
-                    if (hangmanGame.IsGameWon()) {
-                        gameOverText.setString("You Win!");
-                    }
-                    else {
-                        gameOverText.setString("You Lose!");
-                    }
-
-                    gameOverText.setPosition(200.f, 500.f);
-                    gameOverText.setCharacterSize(30);
-
-                    window.draw(gameOverText);
-                    isGameOverMenuVisible = true;
-                }
-
-                if (isGameOverMenuVisible) {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-                        isGameOver = false;
-                        isGameOverMenuVisible = false;
-                        hangmanGame.Reset();
-                        inGame = true;
-                    }
-                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                        inMainMenu = true;
-                        inGame = false;
-                    }
-                }
-            }
-        }
-        std::cin.get();
-        window.display();
     }
 
     return 0;

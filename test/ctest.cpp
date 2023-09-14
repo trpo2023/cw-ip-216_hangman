@@ -1,95 +1,119 @@
-#include "../thirdparty/ctest.h"
-#include "../src/Hangman_lib/HangmanGame.h"
-#include "../src/Hangman_lib/MainMenu.h"
+#include "../src/hangman_lib/hangman.h"
+#include "../src/hangman_lib/menu.h"
+#include "ctest.h"
+#include <iostream>
+#include <sstream>
 
-CTEST(HangmanGameTest, IsGameOverInitiallyFalse) {
-    HangmanGame game;
-    game.Init();
+CTEST(Hangman_class, test1)
+{
+    Hangman game("easy");
+    srand(123); 
 
-    ASSERT_FALSE(game.IsGameOver());
+    const std::string difficultyWord = game.getGuessedWord();
+
+    for (char c : game.getCorrectGuessesAsString()) {
+        ASSERT_TRUE(difficultyWord.find(c) != std::string::npos);
+    }
 }
 
-CTEST(HangmanGameTest, IsGameWonInitiallyFalse) {
-    HangmanGame game;
-    game.Init();
-    ASSERT_FALSE(game.IsGameWon());
+CTEST(Hangman_class, testGuessedWordDisplay)
+{
+    Hangman game("easy");
+    
+    // Устанавливаем фиксированное слово для теста
+    game.setInitialWord("apple");
+
+    // Проверяем отображение угаданных букв в слове
+    game.updateGuessedWord('a');
+    game.updateGuessedWord('p');
+    game.updateGuessedWord('l');
+    ASSERT_STR("appl_", game.getGuessedWord().c_str());
 }
 
-CTEST(MainMenuTest, SelectPlayItemInitially) {
-    sf::RenderWindow window;
-    MainMenu menu(window);
+CTEST(Hangman_class, test3)
+{
+    Hangman game("medium");
+    
+    // Устанавливаем фиксированное слово для теста
+    game.setInitialWord("kangaroo");
 
-    ASSERT_STR(menu.GetSelectedItem() == MainMenu::MenuItem::Play ? "Play" : "Exit", "Play");
-}
-
-CTEST(MainMenuTest, HandleInputSelectExitItem) {
-    sf::RenderWindow window;
-    MainMenu menu(window);
-
-    sf::Event event;
-    event.type = sf::Event::KeyPressed;
-    event.key.code = sf::Keyboard::Down;
-    bool inMainMenu = true;
-    bool inGame = false;
-    menu.HandleInput(event, inMainMenu, inGame);
-
-    ASSERT_STR(menu.GetSelectedItem() == MainMenu::MenuItem::Exit ? "Exit" : "Play", "Exit");
+    // Проверяем отображение угаданных букв в слове
+    game.updateGuessedWord('g');
+    game.updateGuessedWord('o');
+    game.updateGuessedWord('k');
+    ASSERT_STR("k__g__oo", game.getGuessedWord().c_str());
 }
 
 
-CTEST(HangmanGameTest, InitialSecretWordNotEmpty) {
-    HangmanGame game;
-    game.Init();
+CTEST(Hangman_class, test4)
+{
+    Hangman game("hard");
+    
+    // Устанавливаем фиксированное слово для теста
+    game.setInitialWord("javascript");
 
-    ASSERT_FALSE(game.GetSecretWord().empty());
+    // Проверяем отображение угаданных букв в слове
+    game.updateGuessedWord('a');
+    game.updateGuessedWord('p');
+    game.updateGuessedWord('t');
+    ASSERT_STR("_a_a____pt", game.getGuessedWord().c_str());
 }
 
-CTEST(HangmanGameTest, InitialGuessedWordEmpty) {
-    HangmanGame game;
-    game.Init();
+CTEST(Hangman_class, test5)
+{
+    Hangman game("easy");
+    
+    // Устанавливаем фиксированное слово для теста
+    game.setInitialWord("apple");
 
-    ASSERT_TRUE(game.GetGuessedWord() == std::string(game.GetSecretWord().length(), '_'));
+    // Проверяем, что счетчик оставшихся попыток уменьшается при неправильной букве
+    game.updateGuessedWord('z');
+    ASSERT_EQUAL(5, game.getRemainingAttempts());
+
+    game.updateGuessedWord('y');
+    ASSERT_EQUAL(4, game.getRemainingAttempts());
 }
 
-CTEST(HangmanGameTest, CorrectGuessUpdatesGuessedWord) {
-    HangmanGame game;
-    game.Init();
-    char correctGuess = game.GetSecretWord()[0];
-    game.ProcessInput(correctGuess);
-    std::string guessedWord = game.GetGuessedWord();
+CTEST(Hangman_class, test6) {
+    Hangman game("easy");
+    
+    game.setInitialWord("apple");
 
-    ASSERT_TRUE(guessedWord[0] == correctGuess);
+    // Проверяем, что буква 'a' правильно угадана и раскладка обновляется
+    game.updateGuessedWord('a');
+    ASSERT_STR("a____", game.getGuessedWord().c_str());
 }
 
-CTEST(HangmanGameTest, IncorrectGuessReducesAttempts) {
-    HangmanGame game;
-    game.Init();
-    char incorrectGuess = 'z'; // Предполагаем, что 'z' является неправильной догадкой
-    int initialAttempts = game.GetAttemptsLeft();
-    game.ProcessInput(incorrectGuess);
-    int attemptsAfterIncorrectGuess = game.GetAttemptsLeft();
+CTEST(Hangman_class, testGameOver) {
+    Hangman game("easy");
 
-    ASSERT_TRUE(attemptsAfterIncorrectGuess == (initialAttempts - 1));
+    // Устанавливаем фиксированное слово для теста
+    game.setInitialWord("apple");
+
+    // Перебираем буквы, чтобы исчерпать все попытки
+    game.updateGuessedWord('z');
+    game.updateGuessedWord('y');
+    game.updateGuessedWord('x');
+    game.updateGuessedWord('w');
+    game.updateGuessedWord('v');
+    game.updateGuessedWord('u');
+
+    // Проверяем, что игра завершается после исчерпания попыток
+    ASSERT_TRUE(game.isGameOver());
+    ASSERT_FALSE(game.isGameWon());
 }
 
-CTEST(MainMenuTest, InitialSelectedItemIsPlay) {
-    sf::RenderWindow window;
-    MainMenu menu(window);
+CTEST(Hangman_class, testGameWon) {
+    Hangman game("easy");
+    
+    // Устанавливаем фиксированное слово для теста
+    game.setInitialWord("apple");
 
-    ASSERT_TRUE(menu.GetSelectedItem() == MainMenu::MenuItem::Play);
+    // Угадываем все буквы, чтобы выиграть игру
+    game.updateGuessedWord('a');
+    game.updateGuessedWord('p');
+    game.updateGuessedWord('l');
+    game.updateGuessedWord('e');
+    ASSERT_TRUE(game.isGameWon());
 }
 
-CTEST(MainMenuTest, HandleInputSelectPlayItem) {
-    sf::RenderWindow window;
-    MainMenu menu(window);
-
-    sf::Event event;
-    event.type = sf::Event::KeyPressed;
-    event.key.code = sf::Keyboard::Enter;
-    bool inMainMenu = true;
-    bool inGame = false;
-    menu.HandleInput(event, inMainMenu, inGame);
-
-    ASSERT_FALSE(inMainMenu);
-    ASSERT_TRUE(inGame);
-}
