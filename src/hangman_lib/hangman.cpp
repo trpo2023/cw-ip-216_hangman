@@ -71,19 +71,26 @@ void Hangman::displayGuessedWord() {
 
 void Hangman::updateGuessedWord(char guess) {
     bool guessed = false;
+    bool alreadyGuessed = false;
+
     for (size_t i = 0; i < secretWord.length(); ++i) {
         if (secretWord[i] == guess || secretWord[i] == std::tolower(guess)) {
-            guessedWord[i] = secretWord[i];
-            guessed = true;
+            if (guessedWord[i] == '_') {
+                guessedWord[i] = secretWord[i];
+                guessed = true;
+            } else {
+                alreadyGuessed = true;
+            }
         }
     }
 
     if (!guessed) {
-        incorrectGuesses.push_back(guess);
-        attempts--;
+        if (!alreadyGuessed) {
+            incorrectGuesses.push_back(guess);
+            attempts--;
+        }
     }
 }
-
 
 void Hangman::play() {
     while (attempts > 0) {
@@ -107,9 +114,6 @@ void Hangman::play() {
 
             if (secretWord.find(guess) != std::string::npos || secretWord.find(std::tolower(guess)) != std::string::npos) {
                 correctGuesses.push_back(guess);
-            } else {
-                incorrectGuesses.push_back(guess);
-                attempts--;
             }
 
             if (isWordGuessed()) {
@@ -123,6 +127,7 @@ void Hangman::play() {
         std::cout << "Sorry, you ran out of attempts. The word was: " << secretWord << std::endl;
     }
 }
+
 bool Hangman::isGameOver() const {
     return attempts <= 0 || isWordGuessed();
 }

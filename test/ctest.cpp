@@ -16,11 +16,10 @@ CTEST(Hangman_class, test1)
     }
 }
 
-CTEST(Hangman_class, testGuessedWordDisplay)
+CTEST(Hangman_class, test2)
 {
     Hangman game("easy");
     
-    // Устанавливаем фиксированное слово для теста
     game.setInitialWord("apple");
 
     // Проверяем отображение угаданных букв в слове
@@ -34,7 +33,6 @@ CTEST(Hangman_class, test3)
 {
     Hangman game("medium");
     
-    // Устанавливаем фиксированное слово для теста
     game.setInitialWord("kangaroo");
 
     // Проверяем отображение угаданных букв в слове
@@ -49,7 +47,6 @@ CTEST(Hangman_class, test4)
 {
     Hangman game("hard");
     
-    // Устанавливаем фиксированное слово для теста
     game.setInitialWord("javascript");
 
     // Проверяем отображение угаданных букв в слове
@@ -63,7 +60,6 @@ CTEST(Hangman_class, test5)
 {
     Hangman game("easy");
     
-    // Устанавливаем фиксированное слово для теста
     game.setInitialWord("apple");
 
     // Проверяем, что счетчик оставшихся попыток уменьшается при неправильной букве
@@ -79,18 +75,15 @@ CTEST(Hangman_class, test6) {
     
     game.setInitialWord("apple");
 
-    // Проверяем, что буква 'a' правильно угадана и раскладка обновляется
     game.updateGuessedWord('a');
     ASSERT_STR("a____", game.getGuessedWord().c_str());
 }
 
-CTEST(Hangman_class, testGameOver) {
+CTEST(Hangman_class, test7) {
     Hangman game("easy");
 
-    // Устанавливаем фиксированное слово для теста
     game.setInitialWord("apple");
 
-    // Перебираем буквы, чтобы исчерпать все попытки
     game.updateGuessedWord('z');
     game.updateGuessedWord('y');
     game.updateGuessedWord('x');
@@ -98,15 +91,13 @@ CTEST(Hangman_class, testGameOver) {
     game.updateGuessedWord('v');
     game.updateGuessedWord('u');
 
-    // Проверяем, что игра завершается после исчерпания попыток
     ASSERT_TRUE(game.isGameOver());
     ASSERT_FALSE(game.isGameWon());
 }
 
-CTEST(Hangman_class, testGameWon) {
+CTEST(Hangman_class, test8) {
     Hangman game("easy");
     
-    // Устанавливаем фиксированное слово для теста
     game.setInitialWord("apple");
 
     // Угадываем все буквы, чтобы выиграть игру
