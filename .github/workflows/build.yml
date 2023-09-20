@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build project
+      run: |
+        g++ -std=c++11 -o bin/Game.exe src/Hangman_main/*.cpp src/Hangman_lib/*.cpp
+      shell: cmd
+
+    - name: Run tests
+      run: |
+        g++ -std=c++11 -o bin/hangman_test/Test.exe test/*.cpp src/Hangman_lib/*.cpp -Ithirdparty/
+      shell: cmd
